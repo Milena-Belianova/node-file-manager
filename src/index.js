@@ -37,11 +37,14 @@ const handleUserInput = async (input) => {
   }
   const [operation, ...args] = input.trim().split(' ');
   
+  let skipFinallyFlag = false;
+
   try {
     if (args.length === 0) {
       switch(operation) {
         case '.exit':
           rl.close();
+          skipFinallyFlag = true;
           break;
         case 'up':
           cd = cd.split('\\').slice(0, -1).join('\\').length > 0 
@@ -62,7 +65,8 @@ const handleUserInput = async (input) => {
           cd = await changeDir(cd, args[0]);
           break;
         case 'cat':
-          await readPrintFile(args[0]);
+          const result = await readPrintFile(args[0]);
+          console.log(result || 'File is empty');
           break;
         case 'add':
           await createEmptyFile(args[0]);
@@ -104,10 +108,12 @@ const handleUserInput = async (input) => {
       console.warn('Invalid input');
     }
   } catch (err) {
-    //console.log(err);
+    // console.log(err);
     console.warn('Operation failed');
   } finally {
-    console.log(`You are currently in ${cd}\n`);
+    if(!skipFinallyFlag) {
+      console.log(`You are currently in ${cd}\n`);
+    }
   }
 }
 
