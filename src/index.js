@@ -14,7 +14,15 @@ import { printOsInfo } from './os/printOsInfo.js';
 import { compressFile } from './compressDecompress/compressFile.js';
 import { decompressFile } from './compressDecompress/decompressFile.js';
 
-const userName = process.argv[2]?.split('=')[1] || 'Friend';
+let userName = 'Friend';
+
+if (process.argv[2]) {
+  const firstPart = process.argv[2].split('=')[0];
+
+  if (firstPart === '--username') {
+    userName = process.argv[2].split('=')[1];
+  }
+}
 
 console.log(`Welcome to the File Manager, ${userName}!`);
 
