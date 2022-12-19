@@ -9,6 +9,10 @@ import { renameFile } from './basicOperations/renameFile.js';
 import { copyFile } from './basicOperations/copyFile.js';
 import { deleteFile } from './basicOperations/deleteFile.js';
 import { moveFile } from './basicOperations/moveFile.js';
+import { calculateHash } from './hash/calculateHash.js';
+import { printOsInfo } from './os/printOsInfo.js';
+import { compressFile } from './compressDecompress/compressFile.js';
+import { decompressFile } from './compressDecompress/decompressFile.js';
 
 const userName = process.argv[2]?.split('=')[1] || 'Friend';
 
@@ -58,6 +62,12 @@ const handleUserInput = async (input) => {
         case 'rm':
           await deleteFile(args[0]);
           break;
+        case 'hash':
+          await calculateHash(args[0]);
+          break;
+        case 'os':
+          await printOsInfo(args[0]);
+          break;
         default: 
         console.warn('Invalid input');
       }
@@ -73,19 +83,24 @@ const handleUserInput = async (input) => {
         case 'mv':
           await moveFile(args[0], args[1]);
           break;
+        case 'compress':
+          await compressFile(args[0], args[1]);
+          break;
+        case 'decompress':
+          await decompressFile(args[0], args[1]);
+          break;
         default: 
-        console.warn('Invalid input');
+          console.warn('Invalid input');
       }
     } else if (args.length > 2) {
       console.warn('Invalid input');
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     console.warn('Operation failed');
   } finally {
     console.log(`You are currently in ${cd}\n`);
   }
-
 }
 
 rl.on('line', (input) => {
